@@ -86,6 +86,24 @@ func (r *Repository) DeleteBook(context *fiber.Ctx) error{
 	return nil
 }
 
+func (r *Repository) GetBookByID(context *fiber.Ctx) error{
+	id:=context.Params("id")
+	bookModel:=&models.Books{}
+
+	if id==""{
+		context.Status(http.StatusInternalServerError).JSON(
+			&fiber.Map{"message":"id cannot be empty"})
+		return nil
+	}
+	fmt.Println("the id is", id) //optional
+
+	err:=r.DB.Where("id=?", id).First(bookModel).Error
+	if err!=nil{
+		context.Status()
+	}
+
+}
+
 func main() {
 	err := godotenv.Load(".env")
 	if err != nil {
