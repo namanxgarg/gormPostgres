@@ -1,8 +1,11 @@
 package main
 
 import (
+	"goFiberPostgres/models"
+	"goFiberPostgres/storage"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gofiber/fiber"
 	"github.com/joho/godotenv"
@@ -63,15 +66,48 @@ func (r *Repository) GetBooks(context *fiber.Ctx) error{
 	return nil
 }	
 
+func (r *Repository) DeleteBook(context *fiber.Ctx) error{
+	bookModel:=models.Books{}
+	id:=context.Params("id")
+	if id==""{
+		context.Status(http.StatusInternalServerError).JSON(
+			&fiber.Map{"message":"id cannot be empty"})
+		return nil
+	}
+	err:=r.DB.Delete(bookModel, id)
+
+	if err.Error!=nil{
+		context.Status(http.StatusBadRequest).JSON(
+			&fiber.Map{"message":"could not delete book"})
+		return err.Error
+	}
+	context.Status(http.StatusOK).JSON(
+		&fiber.Map{"message":"deletion successful"})
+	return nil
+}
+
 func main() {
 	err := godotenv.Load(".env")
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	config:=&storage.Config{
+		Host:os.Getenv("DB_HOST") ,
+		Port:os.Getenv("DB_PORT"),
+		Password:os.Getenv("DB_PASS"),
+		User:os.Getenv("DB_USER"),
+		SSLMode:os.Getenv("DB_SSLMODE"),
+		DBName:os.Getenv("DB_NAME"),
+	}
+
 	db, err:=storage.NewConnection(config)
 	if err!=nil{
 		log.Fatal("could not load the database")
+	}
+
+	err=models.MigrateBooks(db); if err!=nil{
+		log.Fatal("could not migrate")
 	}
 
 	r := Repository{
