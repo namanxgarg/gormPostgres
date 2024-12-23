@@ -99,9 +99,13 @@ func (r *Repository) GetBookByID(context *fiber.Ctx) error{
 
 	err:=r.DB.Where("id=?", id).First(bookModel).Error
 	if err!=nil{
-		context.Status()
+		context.Status(http.StatusBadRequest).JSON(
+			&fiber.Map{"message":"could not get the book"})
+		return err
 	}
-
+	context.Status(http.statusOK).JSON(
+		&fiber.Map{"message":"book fetched successfully"})
+	return nil
 }
 
 func main() {
