@@ -19,6 +19,7 @@ if struct function (func (r *structure_name))--> method
 fiber --> really fast, based on fasthttp, express.js inspired
   net/http--> base of everything
   gin--> slower than fiber in some concurrent tasks
+  gorilla mux --> based on net/http, slower than fiber
 
 context --> request and responses are in context
 
