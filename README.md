@@ -21,3 +21,5 @@ fiber --> really fast, based on fasthttp, express.js inspired
   gin--> slower than fiber in some concurrent tasks
 
 context --> request and responses are in context
+
+why postgre --> ACID compliant, supports json --> need to learn a lot more
