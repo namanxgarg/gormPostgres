@@ -23,4 +23,4 @@ fiber --> really fast, based on fasthttp, express.js inspired
 
 context --> request and responses are in context
 
-why postgre --> ACID compliant, supports json --> need to learn a lot more
+why postgre --> ACID compliant, supports json --> need to learn a lot more (read a bit, but learn about database)
